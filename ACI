@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IPv4/IPv6 Network & Cisco ACI Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #1a73e8;
+    }
+    code {
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    pre {
+      background: #eee;
+      padding: 10px;
+      overflow-x: auto;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    blockquote {
+      background: #f1f1f1;
+      border-left: 5px solid #ccc;
+      padding: 10px 20px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧠 Build an IPv4/IPv6 Network & Intro to Cisco ACI</h1>
+
+<p>This guide walks you through setting up an IPv4 or IPv6 network from scratch and introduces Cisco's ACI (Application Centric Infrastructure) for software-defined networking in data centers.</p>
+
+<hr>
+
+<h2>🔧 Equipment You’ll Need</h2>
+<ul>
+  <li><strong>Router:</strong> Cisco ISR, MikroTik, Ubiquiti EdgeRouter, Netgear, TP-Link</li>
+  <li><strong>Switch:</strong> Cisco Catalyst (L2/L3), Netgear Smart Switch</li>
+  <li><strong>Firewall:</strong> pfSense, Cisco ASA, Fortinet, Palo Alto</li>
+  <li><strong>End Devices:</strong> Computers, Servers, VoIP phones, Raspberry Pi</li>
+  <li><strong>Access Points:</strong> For wireless connectivity</li>
+  <li><strong>Cabling:</strong> Ethernet (Cat5e/6/6a)</li>
+  <li><strong>Modem:</strong> Optional, for ISP access</li>
+  <li><strong>Optional Tools:</strong> Wireshark, SolarWinds, open-source monitoring tools</li>
+</ul>
+
+<h2>🧱 Steps to Build the Network (IPv4/IPv6)</h2>
+
+<h3>1. Plan Your Addressing Scheme</h3>
+<ul>
+  <li><strong>IPv4:</strong> Use private ranges like <code>192.168.0.0/16</code>, <code>172.16.0.0/12</code>, or <code>10.0.0.0/8</code></li>
+  <li><strong>IPv6:</strong> Use Unique Local Address (ULA) like <code>fd12:3456:abcd::/64</code></li>
+</ul>
+
+<h3>2. Set Up the Router</h3>
+<ul>
+  <li>Assign WAN IP (DHCP or static)</li>
+  <li>Configure LAN IPs</li>
+  <li>Enable DHCP (IPv4) and SLAAC/DHCPv6 (IPv6)</li>
+</ul>
+
+<h3>3. Configure the Switch</h3>
+<ul>
+  <li>Unmanaged: Plug and go</li>
+  <li>Managed: Assign VLANs, trunk/access ports, and optional management IP</li>
+</ul>
+
+<h3>4. Set Up Firewall Rules</h3>
+<ul>
+  <li>Block all inbound traffic by default</li>
+  <li>Allow traffic as needed for applications</li>
+  <li>For IPv6, ensure firewalling (no NAT)</li>
+</ul>
+
+<h3>5. Connect Devices</h3>
+<ul>
+  <li>Use static or dynamic IPs</li>
+  <li>Verify gateway and DNS</li>
+  <li>Test with <code>ping</code>, <code>tracert</code>, <code>ipconfig</code></li>
+</ul>
+
+<h3>6. Configure NAT (IPv4)</h3>
+<ul>
+  <li>Enable NAT for internet access</li>
+  <li>Set up port forwarding for services</li>
+</ul>
+
+<h3>7. Test and Monitor</h3>
+<ul>
+  <li>Test internal/external connectivity</li>
+  <li>Use tools like <code>netstat</code>, <code>nslookup</code></li>
+</ul>
+
+<h2>✅ Example Home Lab Setup</h2>
+<table>
+  <tr>
+    <th>Component</th>
+    <th>Example</th>
+  </tr>
+  <tr>
+    <td>Router</td>
+    <td>Cisco ISR 1941, pfSense, Ubiquiti</td>
+  </tr>
+  <tr>
+    <td>Switch</td>
+    <td>Cisco Catalyst L2/L3, Netgear</td>
+  </tr>
+  <tr>
+    <td>Devices</td>
+    <td>Windows/Linux VMs, Raspberry Pi</td>
+  </tr>
+  <tr>
+    <td>IPv4 Range</td>
+    <td><code>192.168.10.0/24</code></td>
+  </tr>
+  <tr>
+    <td>IPv6 Range</td>
+    <td><code>fd00:abcd:1234::/64</code></td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>🧠 Cisco ACI (Application Centric Infrastructure)</h2>
+<p><strong>Cisco ACI</strong> is a software-defined networking (SDN) solution for data centers that uses a spine-leaf architecture and policy-based automation managed by the APIC (Application Policy Infrastructure Controller).</p>
+
+<h3>Core Components:</h3>
+<ul>
+  <li><strong>Spine switches:</strong> High-speed backbone</li>
+  <li><strong>Leaf switches:</strong> Connect servers and APICs</li>
+  <li><strong>APIC:</strong> Centralized controller (usually 3+)</li>
+</ul>
+
+<pre>
+      [ Spine1 ]     [ Spine2 ]
+         |  \         /   |
+         |   \       /    |
+     [ Leaf1 ]   [ Leaf2 ]   [ Leaf3 ]
+        |             |          |
+   [Server1]     [Server2]   [Server3]
+</pre>
+
+<h3>Setup Workflow:</h3>
+<ol>
+  <li>Rack and cable spine-leaf + APIC</li>
+  <li>Power on and access APIC via OOB</li>
+  <li>Run setup wizard: fabric name, pod ID, infra VLAN, TEP pool</li>
+  <li>Auto-discover and register fabric nodes</li>
+  <li>Define policies and application profiles</li>
+</ol>
+
+<h3>Example Tenant Structure (YAML):</h3>
+<pre>
+Tenant: HR
+  VRF: HR-VRF
+    Bridge Domain: HR-BD
+      EPG: HR-Desktops
+      EPG: HR-Servers
+    Contract: Allow HTTPS from Desktops to Servers
+</pre>
+
+<h2>🔐 High Availability (HA)</h2>
+<blockquote>
+  <strong>High Availability</strong> ensures the network continues to operate even if one or more components fail.
+</blockquote>
+
+<ul>
+  <li>Redundant APICs (3+ recommended)</li>
+  <li>Redundant spines/leafs/links</li>
+  <li>No single point of failure</li>
+  <li>Fast convergence and fault tolerance</li>
+</ul>
+
+<h3>Real-Life Analogy:</h3>
+<p>Think of HA like having multiple airplane engines. If one fails, the others keep you flying safely.</p>
+
+<hr>
+
+<p>© 2025 Your Name • MIT License</p>
+
+</body>
+</html>
